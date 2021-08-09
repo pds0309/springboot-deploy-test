@@ -3,4 +3,7 @@ os: linux
 files:
   - source:  /
     destination: /home/ubuntu/springboot/build
-
+hooks:
+  AfterInstall:
+    - location: rundeploy.sh
+      timeout: 180
