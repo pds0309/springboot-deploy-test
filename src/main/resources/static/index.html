@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+</head>
+<script>
+    function addComments() {
+        let val = [$('#name').val(), $('#password').val(), $('#content').val()];
+        return $.ajax({
+            type: 'POST',
+            url: 'post/comments',
+            contentType: 'application/json',
+            data: JSON.stringify(val),
+            success: function () {
+                window.location.reload();
+            }
+        });
+    }
+
+    function deleteComments(id){
+        let cid = id.split('-')[1];
+        let pass = $(`#password-${cid}`).val();
+        $.ajax({
+            type: 'PUT',
+            url: `delete/comments/${cid}`,
+            contentType: 'text/plain',
+            data: pass,
+            success: function(){
+                window.alert("댓글이 성공적으로 삭제되었습니다.");
+                window.location.reload();
+            },
+            error: function(response){
+                window.alert("비밀번호가 일치하지 않습니다.");
+            }
+        });
+    }
+
+</script>
+<body style="background-color:skyblue">
+<div style="width: 100%;">
+    <div style="width: 40%;float: left">
+        <div style="border-bottom: 1px solid black">댓글 달아봐요</div>
+
+        <p>이름 : </p>
+        <input id="name" placeholder=" ">
+        <p>비밀번호 : </p>
+        <input id="password" placeholder=" " type="password">
+        <p>내용</p>
+        <input id="content" placeholder=" " style="height: 100px;">
+        <br><br>
+        <button id="btn" onclick="addComments()">댓글 달기</button>
+    </div>
+    <div style="width: 55%;float: left;">
+        <div style="border-bottom: 1px solid black">댓글 목록</div>
+        <br>
+        <div th:each="comment:${commentlist}" style="border: 1px solid wheat">
+            <p th:id="|comm-${comment.getCId()}|" style="border-bottom: 1px solid wheat">
+                <span>작성자 : </span>
+                <span th:text="${comment.getName()}"></span>&nbsp;&nbsp;
+                <span>비밀번호: </span>
+                <input th:id="|password-${comment.getCId()}|" placeholder=" " type="password">
+                <button th:id="|delete-${comment.getCId()}|" onclick="deleteComments(this.id)">삭제</button>
+            </p>
+            <div>
+                <p th:id="|content-${comment.getCId()}|" th:text="${comment.getContents()}"></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

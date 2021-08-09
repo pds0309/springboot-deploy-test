@@ -1,0 +1,44 @@
+language: java
+jdk:
+  - openjdk8
+
+branches:
+  only:
+    - master
+
+before_install:
+  - chmod +x gradlew
+
+# Travis CI 서버의 Home
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+script: "./gradlew clean build"
+
+
+before_deploy:
+  - zip -r springboot-test-cicd *
+  - mkdir -p deploytest
+  - mv springboot-test-cicd.zip deploytest/springboot-test-cicd.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY 
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: springboot-deploy-test-bucket # 생성했던 S3 버킷
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: public_read
+    local_dir: deploytest #before_deploy 에서 만든 디렉터리 이름
+    wait-until-deployed: true
+    on:
+      repo: pds0309/springboot-deploy-test #깃허브 레포지토리 주소
+      branch: master
+      
+# CI 실행 완료시 메일로 알
+notifications:
+  email:
+    recipients:
+      - ehd0309@naver.com
