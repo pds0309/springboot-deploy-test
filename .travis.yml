@@ -36,8 +36,21 @@ deploy:
     on:
       repo: pds0309/springboot-deploy-test #깃허브 레포지토리 주소
       branch: master
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY 
+    secret_access_key: $AWS_SECRET_KEY 
+    bucket: springboot-deploy-test-bucket # S3 버킷
+    key: springboot-test-cicd.zip # 빌드 파일을 압축해서 전달
+    bundle_type: zip
+    application: springboot-deploytest-app # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
+    deployment_group: springboot-deploytest-group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      repo: pds0309/springboot-deploy-test
+      branch: master 
       
-# CI 실행 완료시 메일로 알
+# CI 실행 완료시 메일로 알려준다
 notifications:
   email:
     recipients:
