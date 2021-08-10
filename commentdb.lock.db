@@ -1,6 +1,6 @@
 #FileLock
-#Fri Aug 06 13:37:59 KST 2021
-hostName=DESKTOP-REGVU7O
-id=17b19c0d39558e69386a292604f37ff914286efa389
+#Tue Aug 10 10:52:13 KST 2021
+hostName=DESKTOP-REGVU7O.mshome.net
+id=17b2dc292260d855ec6db8c559c4842ea051efb09cd
 method=file
-server=192.168.99.1\:64309
+server=172.29.160.1\:56961
